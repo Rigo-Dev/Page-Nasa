@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import fetchApi from "../../Utils/fetch";
@@ -9,7 +9,7 @@ import LastFiveDaysImages from "../../Components/LastFiveDaysImages/LastFiveDays
 
 const Home = () => {
   const [todaysImage, setTodaysImage] = useState<PostImage>({});
-  const [lastFiveDaysImages, setLastFiveDaysImages] = useState<PostImage[]>([])
+  const [lastFiveDaysImages, setLastFiveDaysImages] = useState<PostImage[]>([]);
 
   useEffect(() => {
     const loadTodaysImage = async () => {
@@ -26,12 +26,13 @@ const Home = () => {
       try {
         const date = new Date();
         const todaysDate = format(date, "yyyy-MM-dd");
-        const fiveDaysAgoDate = format(sub(date, { days: 5 }), "yyyy-MM-dd");        
-        
-        const lastFiveDaysImagesResponse = await fetchApi(`&start_date=${fiveDaysAgoDate}&end_date=${todaysDate}`)
+        const fiveDaysAgoDate = format(sub(date, { days: 5 }), "yyyy-MM-dd");
 
-        setLastFiveDaysImages(lastFiveDaysImagesResponse );
-      
+        const lastFiveDaysImagesResponse = await fetchApi(
+          `&start_date=${fiveDaysAgoDate}&end_date=${todaysDate}`
+        );
+
+        setLastFiveDaysImages(lastFiveDaysImagesResponse);
       } catch (error) {
         console.log(error);
       }
@@ -45,9 +46,11 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
-      <TodaysImage {...todaysImage} />
-      <LastFiveDaysImages postImages={lastFiveDaysImages}/>
+      <SafeAreaView>
+        <Header />
+        <TodaysImage {...todaysImage} />
+      </SafeAreaView>
+        <LastFiveDaysImages postImages={lastFiveDaysImages} />
     </View>
   );
 };
@@ -56,6 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 5,
+    backgroundColor: 'rgba(7,26,93,255)'
   },
 });
 
